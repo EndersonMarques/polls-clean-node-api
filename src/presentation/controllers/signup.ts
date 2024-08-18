@@ -1,24 +1,14 @@
 import { MissignParamnsError } from '../errors/missing-params-erro'
 import { HttpRequest, HttpResponse } from '../protocols/http'
-
+import { badRequest } from '../helpers/helpers'
 export class SignUpController {
     handle (httpRequest: HttpRequest): HttpResponse {
-        if(!httpRequest.body.name) {
-            return {
-                statusCode: 400,
-                body: new MissignParamnsError('name')
+        const requiredFildes = ['name', 'email', 'password', 'passwordConfirmation']
+        for (const field of requiredFildes) {
+            if (!httpRequest.body[field]) {
+                return badRequest(new MissignParamnsError(field))
             }
         }
-
-        if(!httpRequest.body.email) {
-            return {
-                statusCode: 400,
-                body: new MissignParamnsError('email')
-            }
-        }
-        return {
-            statusCode: 400,
-            body: new MissignParamnsError('email')
-        }
+        return badRequest(new MissignParamnsError('name'))
     }
 }
